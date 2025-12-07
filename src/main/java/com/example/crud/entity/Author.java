@@ -1,6 +1,8 @@
 package com.example.crud.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -17,6 +19,8 @@ public class Author {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Имя автора не может быть пустым")
+    @Size(min = 1, max = 100, message = "Имя автора должно быть от 1 до 100 символов")
     @Column(nullable = false)
     private String name;
 

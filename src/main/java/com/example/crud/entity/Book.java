@@ -1,6 +1,10 @@
 package com.example.crud.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -17,14 +21,19 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @NotBlank(message = "Название книги не может быть пустым")
+    @Size(min = 1, max = 200, message = "Название книги должно быть от 1 до 200 символов")
+    @Column(nullable = false, length = 200)
     private String title;
 
-    @Column(name = "publication_year")
+    @NotNull(message = "Год издания не может быть пустым")
+    @Min(value = 1000, message = "Год издания должен быть не меньше 1000")
+    @Column(name = "publication_year", nullable = false)
     private Integer publicationYear;
 
-    @ManyToOne
-    @JoinColumn(name = "author_id")
+    @NotNull(message = "Автор должен быть выбран")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "author_id", nullable = false)
     @JsonIgnore
     private Author author;
 

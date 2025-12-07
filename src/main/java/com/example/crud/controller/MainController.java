@@ -5,9 +5,11 @@ import com.example.crud.entity.Book;
 import com.example.crud.entity.Author;
 import com.example.crud.service.BookService;
 import com.example.crud.service.AuthorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +23,6 @@ public class MainController {
 
     @Autowired
     private AuthorService authorService;
-
 
 
     @GetMapping("/books")
@@ -38,7 +39,11 @@ public class MainController {
     }
 
     @PostMapping("/books/add")
-    public String addBook(@ModelAttribute Book book) {
+    public String addBook(@Valid @ModelAttribute Book book, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("authors", authorService.findAll());
+            return "add-book";
+        }
         bookService.save(book);
         return "redirect:/books";
     }
@@ -53,7 +58,11 @@ public class MainController {
     }
 
     @PostMapping("/books/edit/{id}")
-    public String updateBook(@PathVariable("id") Long id, @ModelAttribute Book book) {
+    public String updateBook(@PathVariable("id") Long id, @Valid @ModelAttribute Book book, BindingResult result, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("authors", authorService.findAll());
+            return "edit-book";
+        }
         bookService.updateBook(id, book);
         return "redirect:/books";
     }
@@ -77,7 +86,10 @@ public class MainController {
     }
 
     @PostMapping("/authors/add")
-    public String addAuthor(@ModelAttribute Author author) {
+    public String addAuthor(@Valid @ModelAttribute Author author, BindingResult result) {
+        if (result.hasErrors()) {
+            return "add-author";
+        }
         authorService.save(author);
         return "redirect:/authors";
     }
@@ -91,7 +103,10 @@ public class MainController {
     }
 
     @PostMapping("/authors/edit/{id}")
-    public String updateAuthor(@PathVariable("id") Long id, @ModelAttribute Author author) {
+    public String updateAuthor(@PathVariable("id") Long id, @Valid @ModelAttribute Author author, BindingResult result) {
+        if (result.hasErrors()) {
+            return "edit-author";
+        }
         authorService.updateAuthor(id, author);
         return "redirect:/authors";
     }

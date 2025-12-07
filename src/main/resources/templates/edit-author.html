@@ -8,7 +8,8 @@
 <h1>Редактировать автора</h1>
 <form action="#" th:action="@{/authors/edit/{id}(id=${author.id})}" th:object="${author}" method="post">
     <label for="name">Имя:</label>
-    <input type="text" id="name" th:field="*{name}" required> <br><br>
+    <input type="text" id="name" th:field="*{name}" required> <br>
+    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" style="color: red;"></div><br>
     <input type="submit" value="Обновить">
 </form>
 <a href="/authors">Отмена</a>
